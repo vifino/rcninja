@@ -13,6 +13,10 @@
 Servo motor;
 Servo steering;
 
+// Start values
+int motor_throttle = 0;
+int steering_value = 80;
+
 // Strings
 int char_newline = 10;
 int char_space = 32;
@@ -26,9 +30,6 @@ void setup() {
   pinMode(13, OUTPUT);
   digitalWrite(13, true);
 }
-
-int motor_throttle = 0;
-int steering_value = 90;
 
 String read_buffer = "";
 
@@ -56,5 +57,5 @@ void loop() {
     Serial.write("\n");
   }
   motor.write(motor_throttle);
-  steering.write(motor_throttle);
+  steering.write(steering_value);
 }
