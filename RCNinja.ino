@@ -13,8 +13,12 @@
 Servo motor;
 Servo steering;
 
+// Strings
+int char_newline = 10;
+int char_space = 32;
+
 void setup() {
-  Serial.begin(11520);
+  Serial.begin(9600);
   motor.attach(5);
   steering.attach(6);
 
@@ -26,10 +30,30 @@ void setup() {
 int motor_throttle = 0;
 int steering_value = 90;
 
+String read_buffer = "";
+
+int read_num_until(int stopchar) {
+  read_buffer = "";
+  while (Serial.available() > 0) {
+    int inp_byte = Serial.read();
+    if (inp_byte == stopchar)
+      return read_buffer.toInt();
+    else {
+      read_buffer += (char)inp_byte;
+    }
+  }
+}
+
+
 void loop() {
   while (Serial.available() > 0) {
-      motor_throttle = constrain(Serial.parseInt(), 0, 180);
-      steering_value = constrain(Serial.parseInt(), 0, 180);
+    motor_throttle = read_num_until(char_space);
+    steering_value = read_num_until(char_newline);
+    Serial.write("Motor: ");
+    Serial.print(motor_throttle);
+    Serial.write("\nSteering: ");
+    Serial.print(steering_value);
+    Serial.write("\n");
   }
   motor.write(motor_throttle);
   steering.write(motor_throttle);
